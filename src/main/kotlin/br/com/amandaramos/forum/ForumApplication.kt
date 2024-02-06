@@ -1,5 +1,5 @@
 package com.amandaramos.br.com.amandaramos.forum
-
+//-1 parte
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 

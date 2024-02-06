@@ -1,5 +1,5 @@
 package com.amandaramos.br.com.amandaramos.forum.dto
-
+//16 parte
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size

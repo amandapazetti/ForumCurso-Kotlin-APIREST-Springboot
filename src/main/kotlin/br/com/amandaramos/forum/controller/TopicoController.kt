@@ -1,5 +1,5 @@
 package com.amandaramos.br.com.amandaramos.forum.controller
-
+//20 parte
 import com.amandaramos.br.com.amandaramos.forum.dto.AtualizacaoTopicoForm
 import com.amandaramos.br.com.amandaramos.forum.dto.NovoTopicoForm
 import com.amandaramos.br.com.amandaramos.forum.dto.TopicoView
@@ -7,42 +7,40 @@ import com.amandaramos.br.com.amandaramos.forum.service.TopicoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.util.UriComponentsBuilder
-import javax.validation.Valid
+
+import java.net.URI
+
 
 @RestController
 @RequestMapping("/topicos")
-class TopicoController (private val service: TopicoService) {
+class TopicoController (private val topicoService: TopicoService) {
     @GetMapping
-    fun listar(): List<TopicoView> {
-        return service.listar()
+    fun listarTopicos(): ResponseEntity<List<TopicoView>> {
+        val topicos = topicoService.listar()
+        return ResponseEntity.ok(topicos)
     }
 
     @GetMapping("/{id}")
-    fun buscarPorId(@PathVariable id: Long): TopicoView {
-        return service.buscarPorId(id)
+    fun buscarTopicoPorId(@PathVariable id: Long): ResponseEntity<TopicoView> {
+        val topico = topicoService.buscarPorId(id)
+        return ResponseEntity.ok(topico)
     }
 
     @PostMapping
-    fun cadastrar(
-        @RequestBody @Valid form: NovoTopicoForm,
-        uriBuilder: UriComponentsBuilder
-    ): ResponseEntity<TopicoView> {
-        val topicoView = service.cadastrar(form)
-        val uri = uriBuilder.path("/topicos/${topicoView.id}").build().toUri()
-        return ResponseEntity.created(uri).body(topicoView)
+    fun cadastrarTopico(@RequestBody form: NovoTopicoForm): ResponseEntity<TopicoView> {
+        val topico = topicoService.cadastrar(form)
+        return ResponseEntity.created(URI("/topicos/${topico.id}")).body(topico)
     }
 
-    @PutMapping
-    fun atualizar(@RequestBody @Valid form: AtualizacaoTopicoForm): ResponseEntity<TopicoView> {
-        val topicoView = service.atualizar(form)
-        return ResponseEntity.ok(topicoView)
+    @PutMapping("/{id}")
+    fun atualizarTopico(@PathVariable id: Long, @RequestBody form: AtualizacaoTopicoForm): ResponseEntity<TopicoView> {
+        val topico = topicoService.atualizar(id, form)
+        return ResponseEntity.ok(topico)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deletar(@PathVariable id: Long) {
-        service.deletar(id)
+    fun deletarTopico(@PathVariable id: Long) {
+        topicoService.deletar(id)
     }
-
 }

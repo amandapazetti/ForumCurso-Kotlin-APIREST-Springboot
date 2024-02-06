@@ -1,64 +1,53 @@
 package com.amandaramos.br.com.amandaramos.forum.service
-
+//11 parte
+import br.com.amandaramos.forum.repository.TopicoRepository
 import com.amandaramos.br.com.amandaramos.forum.dto.AtualizacaoTopicoForm
 import com.amandaramos.br.com.amandaramos.forum.dto.NovoTopicoForm
 import com.amandaramos.br.com.amandaramos.forum.dto.TopicoView
 import com.amandaramos.br.com.amandaramos.forum.mapper.TopicoFormMapper
 import com.amandaramos.br.com.amandaramos.forum.mapper.TopicoViewMapper
-import com.amandaramos.br.com.amandaramos.forum.model.Topico
-import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.stereotype.Service
-import java.util.stream.Collectors
+
 @Service
-class TopicoService (private var topicos: List<Topico> = ArrayList(),
+class TopicoService (private val topicoRepository: TopicoRepository,
                      private val topicoViewMapper: TopicoViewMapper,
                      private val topicoFormMapper: TopicoFormMapper,
-                     private val notFoundMessage: String = "Topico nao encontrado!"
-) {
 
+) {
+    private val notFoundMessage = "Topico nao encontrado!"
     fun listar(): List<TopicoView> {
-        return topicos.stream().map { t ->
-            topicoViewMapper.map(t)
-        }.collect(Collectors.toList())
+        return topicoRepository.findAll().map { topicoViewMapper.map(it) }
     }
 
     fun buscarPorId(id: Long): TopicoView {
-        val topico = topicos.stream().filter { t ->
-            t.id == id
-        }.findFirst().orElseThrow{ ChangeSetPersister.NotFoundException() }
+        val topico = topicoRepository.findById(id)
+            .orElseThrow { NoSuchElementException(notFoundMessage) }
         return topicoViewMapper.map(topico)
     }
 
     fun cadastrar(form: NovoTopicoForm): TopicoView {
         val topico = topicoFormMapper.map(form)
-        topico.id = topicos.size.toLong() + 1
-        topicos = topicos.plus(topico)
-        return topicoViewMapper.map(topico)
+        val topicoSalvo = topicoRepository.save(topico)
+        return topicoViewMapper.map(topicoSalvo)
     }
 
-    fun atualizar(form: AtualizacaoTopicoForm): TopicoView {
-        val topico = topicos.stream().filter { t ->
-            t.id == form.id
-        }.findFirst().orElseThrow{ ChangeSetPersister.NotFoundException() }
-        val topicoAtualizado = Topico(
-            id = form.id,
-            titulo = form.titulo,
-            mensagem = form.mensagem,
-            autor = topico.autor,
-            curso = topico.curso,
-            respostas = topico.respostas,
-            status = topico.status,
-            dataCriacao = topico.dataCriacao
-        )
-        topicos = topicos.minus(topico).plus(topicoAtualizado)
-        return topicoViewMapper.map(topicoAtualizado)
+    fun atualizar(id: Long, form: AtualizacaoTopicoForm): TopicoView {
+        val topico = topicoRepository.findById(form.id)
+            .orElseThrow { NoSuchElementException(notFoundMessage) }
+
+        // Atualiza os campos necessários
+        topico.apply {
+            titulo = form.titulo
+            mensagem = form.mensagem
+        }
+
+        val topicoSalvo = topicoRepository.save(topico)
+        return topicoViewMapper.map(topicoSalvo)
     }
 
     fun deletar(id: Long) {
-        val topico = topicos.stream().filter { t ->
-            t.id == id
-        }.findFirst().orElseThrow{ ChangeSetPersister.NotFoundException() }
-        topicos = topicos.minus(topico)
+        val topico = topicoRepository.findById(id)
+            .orElseThrow { NoSuchElementException(notFoundMessage) }
+        topicoRepository.delete(topico)
     }
-
 }

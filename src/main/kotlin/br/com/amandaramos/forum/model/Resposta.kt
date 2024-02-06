@@ -1,8 +1,15 @@
 package com.amandaramos.br.com.amandaramos.forum.model
-
+//6 - parte
 import java.time.LocalDateTime
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
+@Entity
 data class Resposta (
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null, // Identificador único, inicializado como nulo por padrão.
     val mensagem: String, // Conteúdo da resposta.
     val dataCriacao: LocalDateTime = LocalDateTime.now(), // Data e hora de criação, iniciada com a atual.

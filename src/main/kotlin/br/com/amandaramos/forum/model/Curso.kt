@@ -1,10 +1,19 @@
 package com.amandaramos.br.com.amandaramos.forum.model
+
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+
 //3 parte
 
+@Entity
 // Define uma data class chamada Curso para representar informações sobre um curso.
 //data class Curso (
 data class Curso (
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     // Propriedade id, que pode ser nula e tem um valor padrão de null.
     val id: Long? = null,
 

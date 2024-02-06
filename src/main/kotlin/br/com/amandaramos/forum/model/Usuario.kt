@@ -1,10 +1,18 @@
 package com.amandaramos.br.com.amandaramos.forum.model
+
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+
 // 2 parte do código
 
-
+@Entity
 // Define uma data class chamada Usuario para representar informações de um usuário.
 data class Usuario (
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     // Propriedade id, que pode ser nula e tem um valor padrão de null.
     val id: Long? = null,
 

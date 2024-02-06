@@ -1,5 +1,5 @@
 package com.amandaramos.br.com.amandaramos.forum.dto
-
+//18 parte
 import com.amandaramos.br.com.amandaramos.forum.model.StatusTopico
 import java.time.LocalDateTime
 

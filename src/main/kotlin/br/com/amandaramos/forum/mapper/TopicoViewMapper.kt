@@ -1,5 +1,5 @@
 package com.amandaramos.br.com.amandaramos.forum.mapper
-
+//15 parte
 import com.amandaramos.br.com.amandaramos.forum.dto.TopicoView
 import com.amandaramos.br.com.amandaramos.forum.model.Topico
 import org.springframework.stereotype.Component
