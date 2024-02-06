@@ -1,10 +1,7 @@
 package com.amandaramos.br.com.amandaramos.forum.model
 //5 parte
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 /*Declaração da Data Class: Utilizamos a palavra-chave data class para declarar a classe
  Topico, indicando que ela será usada para representar dados imutáveis.
@@ -20,9 +17,17 @@ data class Topico (
     var titulo: String, // Título do tópico, campo obrigatório
     var mensagem: String, // Mensagem do tópico, campo obrigatório
     val dataCriacao: LocalDateTime = LocalDateTime.now(), // Data e hora de criação do tópico, padrão é a data e hora atuais
+
+    @ManyToOne
     val curso: Curso,    // Curso associado ao tópico, representado por outra data class chamada Curso
+
+    @ManyToOne
     val autor: Usuario,  // Autor do tópico, representado por outra data class chamada Usuario
+
+    @Enumerated(value = EnumType.STRING)
     val status: StatusTopico = StatusTopico.NAO_RESPONDIDO,  // Status do tópico, inicializado como NAO_RESPONDIDO por padrão
-    val respostas: List<Resposta> = ArrayList()  // Lista de respostas associadas ao tópico, inicializada como uma lista vazia
+
+   @OneToMany(mappedBy = "topico")
+    val respostas: List<Resposta> = listOf()  // Lista de respostas associadas ao tópico, inicializada como uma lista vazia
 
 )
